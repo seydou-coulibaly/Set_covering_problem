@@ -1,0 +1,29 @@
+instance scp41 429
+instance scp45 512
+
+instance scp410 514
+
+instance scp51 253
+instance scp510 265
+
+instance scp61 138
+
+instance scpa1 253
+
+instance scpb1 69
+
+instance scpc1 227
+
+instance scpd1 60
+
+instance scpe1 5
+
+instance scpnre1 29
+
+instance scpnrf1 14
+
+instance scpnrg1 176
+
+instance scpnrh1 63
+
+instance rail507 174
