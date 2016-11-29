@@ -36,7 +36,7 @@ void methodeGrasp(int **A,int* X,int* C,int *z_solution,int nb_cte, int nb_var,i
        	printf("Default case, alpha is %f\n",alpha);
        	break;
   }
-	//alpha = 0;
+	alpha = 0;
   printf("\n\n");
 	grasp(A,X,C,nb_cte,nb_var,alpha,iteration,z_solution,pire_solution);
 	printf("Pire solution trouvé = %d\n", *pire_solution);

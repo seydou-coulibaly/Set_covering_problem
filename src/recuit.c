@@ -6,70 +6,80 @@
 #include "recuit.h"
 #include "glouton.h"
 #include "simplelocalSearh.h"
-float probabilite_acceptation(float delta);
-void recuit(int **A,int* X,int* C,int nb_cte, int nb_var,int iteration,int *z_solution){
-  printf("DEMARRAGE RECUIT\n");
-  //Construction gloutonne
+void recuit(int **A,int* X,int* C,int nb_cte, int nb_var,int iteration,int *Z,float T, int L, float alpha){
   glutonConstruction(A,X,C,nb_cte,nb_var);
-  affiche_tab_int(X,nb_var);
-  *z_solution = 0;
-  //printf("Z = %d \n",*z_solution);
-  printf("FIN CONSTRUCTION \n");
-  //*z_solution = evaluerFonctionEconomique(X,C,nb_var);
+  int *pire_solution = NULL;
+  pire_solution = malloc(sizeof(int));
+  *pire_solution = 0;
   int n = 0;
   int *voisin = NULL;
   int *solution = NULL;
+  int *solution_voisin = 0;
+  int solution_courante = NULL;
+  solution_voisin = malloc(sizeof(int));
+  *solution_voisin = 1000000;
+  float *t_courant = NULL;
+  int *k = NULL;
+  t_courant = malloc(sizeof(float));
+  k = malloc(sizeof(int));
+  *t_courant = T;
+  *k = 0;
   float delta = 0;
-  float probabilite_accept;
-  int solution_courante = 0;
+  float probabilite_generer;
+
+  voisin = malloc(nb_var * sizeof(int));
+  solution = malloc(nb_var * sizeof(int));
+  if (solution == NULL || voisin == NULL || solution_voisin == NULL){
+      printf("Insuffisance de memoire pour allouer une table de contraintes ou d'utilités\n");
+      exit(1);
+  }
   for (int i = 0; i < nb_var; i++) {
     solution[i] = X[i];
     voisin[i] = X[i];
   }
-  int *zSolution_courante = &solution_courante;
-  *zSolution_courante = evaluer_fonction_economique(solution,C,nb_var);
-  //pire solutin durant les iterations
-  int *pire_solution = NULL;
-  pire_solution = malloc(sizeof(int));
-  *pire_solution = 0;
-  voisin = malloc(nb_var * sizeof(int));
-  solution = malloc(nb_var * sizeof(int));
-  if (solution == NULL || voisin == NULL){
-			printf("Insuffisance de memoire pour allouer une table de contraintes ou d'utilités\n");
-			exit(1);
-	}
+  solution_courante = evaluer_fonction_economique(solution,C,nb_var);
   do {
     n++;
+    *k = *k + 1;
     //tirer un voisin de X
-    rechercheLocaleSimple(A,voisin,C,zSolution_courante,nb_cte,nb_var,1,0,50,pire_solution);
+    rechercheLocaleSimple(A,voisin,C,solution_voisin,nb_cte,nb_var,1,0,50,pire_solution);
+    *solution_voisin = evaluer_fonction_economique(voisin,C,nb_var);
     //calcule de delta
-    delta = evaluer_fonction_economique(voisin,C,nb_var) - evaluer_fonction_economique(solution,C,nb_var);
+    delta = *solution_voisin - solution_courante;
     //generer probabilite_acceptation
-    probabilite_accept = rand()%11;
-    probabilite_accept = probabilite_accept/10;
+    probabilite_generer = rand()%11;
+    probabilite_generer = probabilite_generer/10;
     //tester la qualité de la solution
-    if ( delta < 0.0 || probabilite_accept < probabilite_acceptation(delta)) {
+    if ( delta < 0.0 || probabilite_generer < probabilite_acceptation(delta,*t_courant)) {
       // S <- S'
       for (int i = 0; i < nb_var; i++) {
         solution[i] = voisin[i];
       }
-      *zSolution_courante = evaluer_fonction_economique(voisin,C,nb_var);
-      if ( evaluer_fonction_economique(voisin,C,nb_var) < *z_solution) {
+      if ( *solution_voisin <  *Z) {
         for (int i = 0; i < nb_var; i++) {
           X[i] = voisin[i];
         }
-        *z_solution = evaluer_fonction_economique(voisin,C,nb_var);
+        *Z = evaluer_fonction_economique(voisin,C,nb_var);
       }
     }
     //Mettre à jour T
+    update(t_courant,k,L, alpha);
+    if (iteration/2 == n) {
+      *t_courant = T;
+    }
   } while(n != iteration);
 
   free(pire_solution);
+  free(solution_voisin);
   free(voisin);
   free(solution);
 }
-float probabilite_acceptation(float delta){
-    int temps = 0;
-    temps = clock()/CLOCKS_PER_SEC;
+void update(float *t_courant,int *k, int L, float alpha){
+  if (L == *k) {
+    *t_courant = (*t_courant) * alpha;
+    *k = 0;
+  }
+}
+float probabilite_acceptation(float delta, float temps){
   return exp(-delta/temps);
 }

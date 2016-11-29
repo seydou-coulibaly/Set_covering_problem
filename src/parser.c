@@ -15,6 +15,7 @@
 #include "structuresDonnees.h"
 #include "glouton.h"
 #include "grasp.h"
+#include "recuit.h"
 #include "reactiveGrasp.h"
 
 /*------------------------------------------------------------
@@ -119,15 +120,25 @@ int main(int argc, char const *argv[]) {
         printf("\n");
         */
 
-        methodeGlouton(Matrice,X,C,Z,nb_cte,nb_var);
+        //methodeGlouton(Matrice,X,C,Z,nb_cte,nb_var);
         printf("Z = %d\n",*Z);
-
-        //recuit(A,X,C,nb_cte,nb_var,iteration_recuit,*z_solution);
         //methodeGrasp(Matrice,X,C,Z,nb_cte,nb_var,iteration_grasp);
         printf("\n\n");
         //reactiveGrasp(Matrice,X,Z,C,nb_cte,nb_var);
         printf("\n\n");
 
+        /**
+        Donnees recuit
+        */
+        float T = 100;
+        float alpha = 0.70;
+        int L = 3;
+
+        recuit(Matrice,X,C,nb_cte,nb_var,iteration_recuit,Z,T,L,alpha);
+        printf("\n");
+
+        affiche_tab_int(X,nb_var);
+        printf("Z = %d\n",*Z);
 
 
         //Liberations des espaces alloués
