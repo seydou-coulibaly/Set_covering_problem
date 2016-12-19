@@ -124,7 +124,7 @@ int main(int argc, char const *argv[]) {
         printf("Z = %d\n",*Z);
         //methodeGrasp(Matrice,X,C,Z,nb_cte,nb_var,iteration_grasp);
         printf("\n\n");
-        //reactiveGrasp(Matrice,X,Z,C,nb_cte,nb_var);
+        reactiveGrasp(Matrice,X,Z,C,nb_cte,nb_var);
         printf("\n\n");
 
         /**
@@ -134,7 +134,7 @@ int main(int argc, char const *argv[]) {
         float alpha = 0.70;
         int L = 3;
 
-        recuit(Matrice,X,C,nb_cte,nb_var,iteration_recuit,Z,T,L,alpha);
+        //recuit(Matrice,X,C,nb_cte,nb_var,iteration_recuit,Z,T,L,alpha);
         printf("\n");
 
         affiche_tab_int(X,nb_var);

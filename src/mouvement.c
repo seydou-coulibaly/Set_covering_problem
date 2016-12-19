@@ -138,3 +138,57 @@ int nombreDeK(int *A, int colonne,int k){
   }
   return n;
 }
+//mouvementKPExchange
+int* exchange0_1(int* solution,int **matrice,int* C,int ligne,int colonne,int * pire_solution){
+  int nbrK=0,nbrP=0,var_test=0;
+  int *retour = NULL;
+  int *courante = NULL;
+  retour = malloc(colonne * sizeof(int));
+  courante = malloc(colonne * sizeof(int));
+  if (retour == NULL || courante == NULL){  // On vérifie si l'allocation a marché ou non
+    printf("Insuffisance de memoire pour allouer une table\n");
+    exit(0); // On arrête tout
+  }
+  for(int j=0;j<colonne;j++){
+    retour[j] = solution[j];
+    courante[j] = solution[j];
+  }
+  nbrK = nombreDeK(solution,colonne,1);
+  nbrP = nombreDeK(solution,colonne,0);
+  if (nbrK >= 0 && nbrP >= 1) {
+    //fixer une variable
+    for (int i = 0; i < colonne; i++) {
+      if (solution[i] == 0) {
+        for (int j = 0; j < colonne; j++) {
+          if (solution[j] == 1) {
+            //pour k rien à faire
+            //pour p qui vaut 1 alors une variable est mis à 0
+            courante[j] = 0;
+            var_test = valideVoisin(matrice,courante,ligne,colonne);
+            if (var_test == 1) {
+              //solution realisable alors tester si c'est le meilleur
+              if (evaluer_fonction_economique(courante,C,ligne) < evaluer_fonction_economique(retour,C,ligne)) {
+                for(int k=0;k<colonne;k++){
+                  retour[k] = courante[k];
+                }
+              if (evaluer_fonction_economique(courante,C,ligne) > *pire_solution) {
+                *pire_solution = evaluer_fonction_economique(courante,C,ligne);
+              }
+                // recommencer avec le même vecteur x
+                for(int k=0;k<colonne;k++){
+                  courante[k] = solution[k];
+                }
+              }
+            }
+          }
+          //sinon rien à traiter
+        }
+      }
+    }
+    return retour;
+  }
+  else{
+    printf("Mission Impossible\n");
+    return retour;
+  }
+}

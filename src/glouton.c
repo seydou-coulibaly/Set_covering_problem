@@ -66,6 +66,7 @@ void glutonConstruction(int **A,int* X,int* C,int nb_cte, int nb_var){
     *pire_solution = 0;
     rechercheLocaleSimple(A,X,C,z_solution,nb_cte,nb_var,1,0,iteration_descente_simple,pire_solution);
     //descenteProfonde(A,X,C,z_solution,nb_cte,nb_var,1,0,iteration_descente_profonde,pire_solution);
+    //exchange0_1(int* solution,int **matrice,int* C,int ligne,int colonne,int * pire_solution);
     //afficheTableau(X,nb_var);
     *z_solution = evaluer_fonction_economique(X,C,nb_var);
     //printf("\n\t\t\tBetter solution after %d iteration, Z = %d\n\n",iteration_descente_simple,*z_solution);
