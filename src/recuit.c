@@ -66,6 +66,7 @@ void recuit(int **A,int* X,int* C,int nb_cte, int nb_var,int iteration,int *Z,fl
     update(t_courant,k,L, alpha);
     if (iteration/2 == n) {
       *t_courant = T;
+      L = L + 2;
     }
   } while(n != iteration);
 

@@ -23,9 +23,7 @@ main: $(OBJ)
 
 %.o: %.c
 	@$(CC) -o $@ -c -I/. $< $(CFLAGS)
-test: main
-	./$(EXEC)
-
+	
 .PHONY: clean mrproper
 
 clean:

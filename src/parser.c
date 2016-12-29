@@ -120,25 +120,27 @@ int main(int argc, char const *argv[]) {
         printf("\n");
         */
 
-        //methodeGlouton(Matrice,X,C,Z,nb_cte,nb_var);
-        printf("Z = %d\n",*Z);
-        //methodeGrasp(Matrice,X,C,Z,nb_cte,nb_var,iteration_grasp);
-        printf("\n\n");
-        reactiveGrasp(Matrice,X,Z,C,nb_cte,nb_var);
-        printf("\n\n");
-
         /**
         Donnees recuit
         */
-        float T = 100;
-        float alpha = 0.70;
+        float T =150;
+        float alpha = 0.75;
         int L = 3;
 
-        //recuit(Matrice,X,C,nb_cte,nb_var,iteration_recuit,Z,T,L,alpha);
-        printf("\n");
-
+        /*
+        ** Les fonctions appelant les différentes heuristiques ou métaheuristiques vu en cours
+        */
+        double init = clock();
+        methodeGlouton(Matrice,X,C,Z,nb_cte,nb_var);       printf("Z = %d\n",*Z);
+        //methodeGrasp(Matrice,X,C,Z,nb_cte,nb_var,iteration_grasp);        printf("\n\n");
+        //reactiveGrasp(Matrice,X,Z,C,nb_cte,nb_var);        printf("\n\n");
+        //recuit(Matrice,X,C,nb_cte,nb_var,iteration_recuit,Z,T,L,alpha);        printf("\n");
+        double final = clock();
         affiche_tab_int(X,nb_var);
         printf("Z = %d\n",*Z);
+        double temps;
+        temps = (double)(final - init) / CLOCKS_PER_SEC;
+        printf("TEMPS EFFECTUE = %f\n",temps);
 
 
         //Liberations des espaces alloués

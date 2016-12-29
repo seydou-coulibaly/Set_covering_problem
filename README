@@ -1,0 +1,44 @@
+
+        *******************************************************
+                EXECUTION DU PROJET Metaheurisque CSP
+        *******************************************************
+
+        ===============================
+        Les différents dossiers :
+        ===============================
+        /instances                                      contient les instances du problème
+        /best                                           contient un fichier contenant les valeurs à l'optimum
+        /projet                                         contient les documents pdf du projet
+        /scr                                            contient les fichiers sources
+
+
+        ============================================
+        Métaheuristiques et heuristiques implementés
+        ============================================
+        Constuction glouton
+        Recherche locale simple descente basé sur le mouvement k-p exchange soit le 0-1 exchange
+        Grasp
+        Réactive grasp
+        Récuit Simulé
+
+
+        =================================
+        Pour compiler le programme, tapez
+        =================================
+            make
+            puis entrez ->
+
+        =================================
+        Pour executer le programme, tapez
+        =================================
+            ./main scp41
+
+          avec scp41.txt le fichier de test ou l'instance, figurant dans le dossier instances
+
+
+          Remarque : l'executable sur l'instance scp1, appelle ou execute des algorithmes telle que la métaheuristique Grasp ou Récuit Simulé
+
+        ===========================================
+        Pour supprimer l'executable produit, tapez
+        ===========================================
+          make .PHONY

@@ -15,6 +15,7 @@ void reactiveGrasp(int **A,int* X,int *z,int* C,int nb_cte,int nb_var){
   float *probabiliteAlpha = NULL;
   float *q_k = NULL;
   float *z_avg_alpha = NULL;
+  int *numberIter = NULL;
   int *z_temp = NULL;
   pire_solution = malloc(sizeof(int));
   solution = malloc(nb_var * sizeof(int));
@@ -28,6 +29,7 @@ void reactiveGrasp(int **A,int* X,int *z,int* C,int nb_cte,int nb_var){
   probabiliteAlpha = malloc(11 * sizeof(float));
   q_k = malloc(11 * sizeof(float));
   z_avg_alpha = malloc(11 * sizeof(float));
+  numberIter = malloc(11 * sizeof(int));
 
 
   float alpha=0,somme=0;
@@ -45,7 +47,7 @@ void reactiveGrasp(int **A,int* X,int *z,int* C,int nb_cte,int nb_var){
   ensembleAlapha[8] = 0.8;
   ensembleAlapha[9] = 0.9;
   ensembleAlapha[10] = 1.0;
-  if (ensembleAlapha == NULL || z_avg_alpha == NULL || q_k == NULL || solution == NULL || probabiliteAlpha == NULL || pire_solution == NULL || z_temp == NULL) // On vérifie si l'allocation a marché ou non
+  if (ensembleAlapha == NULL || z_avg_alpha == NULL || q_k == NULL || solution == NULL || probabiliteAlpha == NULL || numberIter ==NULL || pire_solution == NULL || z_temp == NULL) // On vérifie si l'allocation a marché ou non
   {
     printf("Insuffisance de memoire pour allouer une table de contraintes ou d'utilités\n");
     exit(0); // On arrête tout
@@ -55,6 +57,7 @@ void reactiveGrasp(int **A,int* X,int *z,int* C,int nb_cte,int nb_var){
     initialiser_tab_float(probabiliteAlpha,11,1/10);
     initialiser_tab_float(z_avg_alpha,11,0);
     initialiser_tab_float(q_k,11,0);
+    initialiser_tab_int(numberIter,11,0);
     do {
       //On applique grasp sur la solution recente X
       for (int i = 0; i < nb_var; i++) {
@@ -68,7 +71,8 @@ void reactiveGrasp(int **A,int* X,int *z,int* C,int nb_cte,int nb_var){
       grasp(A,solution,C,nb_cte,nb_var,alpha,1,z_temp,pire_solution);
       rechercheLocaleSimple(A,solution,C,z_temp,nb_cte,nb_var,1,0,iteration_descente_simple,pire_solution);
       z_courant = *z_temp;
-      z_avg_alpha[elementGenerer] = (z_avg_alpha[elementGenerer] + z_courant)/2;
+      numberIter[elementGenerer] = numberIter[elementGenerer] + 1;
+      z_avg_alpha[elementGenerer] = z_avg_alpha[elementGenerer] + z_courant;
       if (z_best > z_courant) {
         z_best = z_courant;
       }
@@ -76,6 +80,14 @@ void reactiveGrasp(int **A,int* X,int *z,int* C,int nb_cte,int nb_var){
         z_worst = *pire_solution;
       }
     } while(n < N_iteration_grasp);
+
+    for (int k = 0; k < 11; k++) {
+      if (numberIter[k] == 0) {
+        numberIter[k] = 1;
+      }
+      z_avg_alpha[k] = (z_avg_alpha[k])/numberIter[k];
+    }
+
     //Calcule des q_k
     for (int i = 0; i < 11; i++) {
       q_k[i] = ((z_avg_alpha[i])-(z_worst))/(z_best - z_worst);
@@ -103,4 +115,5 @@ void reactiveGrasp(int **A,int* X,int *z,int* C,int nb_cte,int nb_var){
     free(probabiliteAlpha);
     free(q_k);
     free(z_temp);
+    free(numberIter);
 }
